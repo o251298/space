@@ -1,6 +1,5 @@
 <?php
 
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\DefaultController;
 use App\Http\Controllers\NearEarthController;
@@ -15,6 +14,8 @@ use App\Http\Controllers\NearEarthController;
 |
 */
 
+
 Route::get('/', [DefaultController::class, 'index']);
 Route::get('/neo/hazardous', [NearEarthController::class, 'getHazardous']);
 Route::get('/neo/fastest', [NearEarthController::class, 'getFastestHazardous']);
+Route::fallback([DefaultController::class, 'routeNotFound']);

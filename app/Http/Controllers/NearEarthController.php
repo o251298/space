@@ -2,23 +2,30 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Resources\NearEarthResource;
-use App\Models\NearEarth;
+use App\Services\NearEarth\NearEarthService;
 use Illuminate\Http\Request;
 
 class NearEarthController extends Controller
 {
     public function getHazardous()
     {
-        $hazardousObj = NearEarth::query()->where('is_hazardous', 1)->get();
-        return NearEarthResource::collection($hazardousObj);
+        return NearEarthService::getHazardous();
     }
 
 
     public function getFastestHazardous(Request $request)
     {
-        $is_hazardous = (($request->hazardous != null) && (strtoupper($request->hazardous) != "FALSE") && (strtoupper($request->hazardous) != "NULL")) ? true : false;
-        $hazardousObj = NearEarth::query()->where('is_hazardous', intval($is_hazardous))->orderBy('speed', 'DESC')->get();
-        return NearEarthResource::collection($hazardousObj);
+        return NearEarthService::getFastestHazardous($request->all());
+    }
+
+    public function getHazardousForNasa()
+    {
+        $properties = [
+            'start_date=2021-11-01',
+            'end_date=2021-11-01',
+            'api_key=Lw7a55sDVOMBGQiNiElWoK6CCZiJpcP0Bfgp8MHh'
+        ];
+        NearEarthService::getHazardousForNasa($properties);
+        return redirect()->back();
     }
 }
