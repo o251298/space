@@ -2,7 +2,8 @@
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
-
+use App\Http\Controllers\DefaultController;
+use App\Http\Controllers\NearEarthController;
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -14,6 +15,6 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
-    return $request->user();
-});
+Route::get('/', [DefaultController::class, 'index']);
+Route::get('/neo/hazardous', [NearEarthController::class, 'getHazardous']);
+Route::get('/neo/fastest', [NearEarthController::class, 'getFastestHazardous']);
