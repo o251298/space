@@ -60,7 +60,7 @@ class NearEarthService
                     'reference' => $item['neo_reference_id'],
                     'speed' => $item['close_approach_data'][0]['relative_velocity']['kilometers_per_hour'],
                     'is_hazardous' => $item['is_potentially_hazardous_asteroid'],
-                    'data' => $date,
+                    'date' => $date,
                 ]);
             }
         }

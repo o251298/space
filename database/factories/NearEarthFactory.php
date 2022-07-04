@@ -22,7 +22,7 @@ class NearEarthFactory extends Factory
             'name' => $this->faker->title(),
             'speed' => $this->faker->randomFloat(1.0, 0.0, 100000),
             'is_hazardous' => $this->faker->boolean(),
-            'data' => $this->faker->date('Y-m-d H:i:s'),
+            'date' => $this->faker->date('Y-m-d H:i:s'),
         ];
     }
 }

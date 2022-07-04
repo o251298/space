@@ -16,9 +16,11 @@ class NearEarthResource extends JsonResource
     {
         return [
             'id'  => $this->id,
+            'reference'  => $this->reference,
             'name'  => $this->name,
+            'is_hazardous'  => $this->is_hazardous,
             'speed'  => $this->speed,
-            'data'  => $this->data,
+            'date'  => $this->date,
             'created_at'  => $this->created_at,
         ];
     }

@@ -19,7 +19,7 @@ return new class extends Migration
             $table->integer('reference');
             $table->float('speed')->default(0);
             $table->boolean('is_hazardous')->default(false);
-            $table->date('data')->default(date('Y-m-d'));
+            $table->date('date')->default(date('Y-m-d'));
             $table->timestamps();
         });
     }
