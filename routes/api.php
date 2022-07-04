@@ -15,7 +15,7 @@ use App\Http\Controllers\NearEarthController;
 */
 
 
-Route::get('/', [DefaultController::class, 'index']);
-Route::get('/neo/hazardous', [NearEarthController::class, 'getHazardous']);
-Route::get('/neo/fastest', [NearEarthController::class, 'getFastestHazardous']);
+Route::get('/', [DefaultController::class, 'index'])->name('default_index');
+Route::get('/neo/hazardous', [NearEarthController::class, 'getHazardous'])->name('neo_hazardous');
+Route::get('/neo/fastest', [NearEarthController::class, 'getFastestHazardous'])->name('neo_fastest');
 Route::fallback([DefaultController::class, 'routeNotFound']);

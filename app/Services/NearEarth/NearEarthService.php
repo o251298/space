@@ -3,11 +3,14 @@
 namespace App\Services\NearEarth;
 
 use App\Http\Resources\NearEarthResource;
+use App\Jobs\SaveNeoJob;
+use App\Jobs\TestJob;
 use App\Models\NearEarth;
 use App\Services\Http\HttpClient;
 use Illuminate\Http\Resources\Json\JsonResource;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Session;
+use PHPUnit\Util\Exception;
 
 class NearEarthService
 {
@@ -37,8 +40,9 @@ class NearEarthService
         try {
             $httpClient = new HttpClient(new Http());
             $response   = $httpClient->get('https://api.nasa.gov/neo/rest/v1/feed', $properties);
+            if (!key_exists('near_earth_objects', $response->json())) throw new Exception('Empty response!!!');
             // create queue
-            //static::saveHazardousForNasa($response->json());
+            SaveNeoJob::dispatch($response->json()['near_earth_objects']);
             Session::flash('info', isset($response->json()['element_count']) ? "Connection with NASA established. Loading data is queued. Number of data: {$response->json()['element_count']}." : "{$response->json()['http_error']}");
         } catch (\Exception $exception)
         {
@@ -48,7 +52,7 @@ class NearEarthService
 
     public static function saveHazardousForNasa($data) : void
     {
-        foreach ($data['near_earth_objects'] as $date => $near_earth_object)
+        foreach ($data as $date => $near_earth_object)
         {
             foreach ($near_earth_object as $item){
                 NearEarth::create([
