@@ -9,9 +9,9 @@ class NearEarthControllerTest extends TestCase
 {
     use RefreshDatabase;
 
-//   public function test_getHazardous()
-//    {
-//        $response = $this->get('api/neo/hazardous');
-//        $response->assertStatus(200);
-//    }
+   public function test_getHazardous()
+    {
+        $response = $this->get('api/neo/hazardous');
+        $response->assertStatus(200);
+    }
 }

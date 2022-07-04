@@ -14,3 +14,4 @@ yarn-error.log
 /.idea
 /.vscode
 /storage/dbdata
+/storage/db_test_data
