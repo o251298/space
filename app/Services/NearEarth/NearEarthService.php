@@ -4,7 +4,6 @@ namespace App\Services\NearEarth;
 
 use App\Http\Resources\NearEarthResource;
 use App\Jobs\SaveNeoJob;
-use App\Jobs\TestJob;
 use App\Models\NearEarth;
 use App\Services\Http\HttpClient;
 use Illuminate\Http\Resources\Json\JsonResource;

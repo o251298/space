@@ -10,9 +10,9 @@ class NearEarthController extends Controller
 {
     public function getHazardous()
     {
+        //
         return NearEarthService::getHazardous();
     }
-
 
     public function getFastestHazardous(Request $request)
     {

@@ -1,11 +1,9 @@
 <?php
 
 namespace App\Console\Commands;
-
-use App\Services\Http\HttpClient;
+use App\Services\NearEarth\NearEarthService;
+use Carbon\Carbon;
 use Illuminate\Console\Command;
-use Illuminate\Support\Facades\Http;
-use App\Models\NearEarth;
 class ParseNASAData extends Command
 {
     /**
@@ -29,19 +27,14 @@ class ParseNASAData extends Command
      */
     public function handle()
     {
-        $test = new HttpClient(new Http);
-        $response = Http::get('https://api.nasa.gov/neo/rest/v1/feed?start_date=2021-11-01&end_date=2021-11-01&api_key=Lw7a55sDVOMBGQiNiElWoK6CCZiJpcP0Bfgp8MHh');
-        foreach ($response->json()['near_earth_objects'] as $date => $near_earth_object)
-        {
-            foreach ($near_earth_object as $item){
-                $obj = NearEarth::create([
-                    'name' => $item['name'],
-                    'reference' => $item['neo_reference_id'],
-                    'speed' => $item['close_approach_data'][0]['relative_velocity']['kilometers_per_hour'],
-                    'is_hazardous' => $item['is_potentially_hazardous_asteroid'],
-                    'data' => $date,
-                ]);
-            }
-        }
+        $date_current = Carbon::now();
+        $date_last = Carbon::now();
+        $date_last->subDays(3);
+        $properties = [
+            'start_date=' . $date_last->format('Y-m-d'),
+            'end_date=' . $date_current->format('Y-m-d'),
+            'api_key=' . env('NASA_API_KEY')
+        ];
+        NearEarthService::getHazardousForNasa($properties);
     }
 }
