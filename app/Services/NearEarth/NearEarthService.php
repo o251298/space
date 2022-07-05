@@ -9,6 +9,7 @@ use App\Models\NearEarth;
 use App\Services\Http\HttpClient;
 use Illuminate\Http\Resources\Json\JsonResource;
 use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Session;
 use PHPUnit\Util\Exception;
 
@@ -41,7 +42,6 @@ class NearEarthService
             $httpClient = new HttpClient(new Http());
             $response   = $httpClient->get('https://api.nasa.gov/neo/rest/v1/feed', $properties);
             if (!key_exists('near_earth_objects', $response->json())) throw new Exception('Empty response!!!');
-            // create queue
             SaveNeoJob::dispatch($response->json()['near_earth_objects']);
             Session::flash('info', isset($response->json()['element_count']) ? "Connection with NASA established. Loading data is queued. Number of data: {$response->json()['element_count']}." : "{$response->json()['http_error']}");
         } catch (\Exception $exception)
@@ -50,18 +50,24 @@ class NearEarthService
         }
     }
 
-    public static function saveHazardousForNasa($data) : void
+    public static function saveHazardousForNasa(array $data) : void
     {
         foreach ($data as $date => $near_earth_object)
         {
             foreach ($near_earth_object as $item){
-                NearEarth::create([
-                    'name' => $item['name'],
-                    'reference' => $item['neo_reference_id'],
-                    'speed' => $item['close_approach_data'][0]['relative_velocity']['kilometers_per_hour'],
-                    'is_hazardous' => $item['is_potentially_hazardous_asteroid'],
-                    'date' => $date,
-                ]);
+                try {
+                    NearEarth::create([
+                        'name' => $item['name'],
+                        'reference' => $item['neo_reference_id'],
+                        'speed' => $item['close_approach_data'][0]['relative_velocity']['kilometers_per_hour'],
+                        'is_hazardous' => $item['is_potentially_hazardous_asteroid'],
+                        'date' => $date,
+                    ]);
+                } catch (\Exception $exception)
+                {
+                    Log::error($exception);
+                    echo $exception->getMessage();
+                }
             }
         }
     }
